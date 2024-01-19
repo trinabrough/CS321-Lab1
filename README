@@ -1,0 +1,49 @@
+CS 321 Lab 1: Cache Simulation
+
+Trina Brough Spring 2024
+
+Description: This project simulates a cache data structure. The class Test is the driver class and requires the following
+parameters:
+    Cache-level: 1 (for single level cache) or 2 (for a 2-level cache)
+    Cache capacity: The maximum capacity (in number of objects stored) of the cache
+    Cache 2 capacity: Only include if Cache-level was entered as 2
+    Filename: The textfile to parse. The Test class only parses text files and uses a space as the delimiter.
+Test will: verify the validity of the parameters, create the cache object(s), parse the file and store in the cache(s), print
+out statistics to the console. The following statistics are reported:
+    Number of references: This is the number of times the cache was referenced (searched). Global references will equal the total number
+    of words parsed from the file. 1st-level references will equal the total times the 1st-level cache was searched. Since cache 1 will always
+    be searched, this is the same as global references. 2nd-level references is the total number of times the 2nd-level cache was searched.
+    Since, cache 2 is only searched when the word is not found in cache 1, it is smaller than the 1st-level references.
+    Number of hits: This is the number of times the word was found in the cache. Global hits is the sum of the 1st level hits and the
+    2nd level hits.
+    Hit ratio: the number of hits divided by the number of references
+
+Experience:
+    This project contained several new elements for me. I had never used any class other than Scanner for IO. I used your recommendation
+    to use FileInputStream, InputStreamReader, BufferedReader and StringTokenizer and didn't have any problems. However, I can't say that
+    I understand them well. The Java API for FileInputStream suggests using the FileReader class if we're reading streams of characters. 
+    I'd like to understand why you chose FileInputStream instead. Doesn't this add an extra step because now we need an InputStreamReader to
+    convert the bytes from the FileInputStream to characters? Is there a problem using FileReader?
+
+    I also followed your suggestion to use Java's linked list class (even though I really would have preferred to use my own
+    Double-Linked List which I know very well). I was happy with the clear documentation in the API and found this easy to use.
+    When I started writing my cache class, I originally thought it should extend the List. Isn't a cache a list? All we need is the
+    list and a few extra instance variables. I ran into some problems and  didn't end up doing it this way. I just created an instance 
+    variable "cache" as type linked list in my cache class. What is the best way to do this? Should I have Cache as a child of LinkedList? 
+
+    I also have a question regarding catching IO errors. The compiler wanted me to put all my IO commands within try-catch blocks. But when
+    I read the API for the constructors I was using for InputStreamReader and BufferedReader, it didn't indicate that they throw any
+    types of exceptions. If these don't throw exceptions, why do I need them in a try-catch block?
+
+    I orignally wrote and used a method in my Cache class to "move" the item to the top of the cache by deleting it and adding it at the
+    front. It used the index to know what item to remove. However, before calling this, I needed to see if the item was in the cache. I realized
+    that it would be more efficient while searching for the item originally to just remove it if I found it. If an item was found in the cache, 
+    it was not going to remain where it was. I changed my Test class to findAndRemove the item it was searching for and if it found something,
+    I just added it to the top. This efficiency knocked about 10,000 milliseconds off my running time (when running with: java Test 2 1000 5000 Encyclopedia.txt).
+
+Data:
+    When running the following from the command line: java Test 2 1000 5000 Encyclopedia.txt my Test running time was 16133 milliseconds on
+    my personal laptop.
+
+    When running the following from the command line: java Test 2 1000 5000 Encyclopedia.txt my Test running time was 18898 milliseconds on
+    Onyx.

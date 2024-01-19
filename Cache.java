@@ -20,20 +20,14 @@ public class Cache<T> {
     thisCache = new LinkedList<T>();
   }
 
-  /**findItemIndex searches the cache for the element passed in and returns the index
-   * @param T item: object to search for
-   * @return index of object, -1 if not found
-   */
-    public int findItemIndex(T item){
-      return thisCache.indexOf(item);
-    }
 
-    /**moveToTop moves the element stored at index by deleting the element at index and adding it to the front of the list
-     * @param int index is the index of the element to move
+    /**findAndRemove(T item) will locate and remove the item from the cache.
+     * It returns true if it found and false if the item is not in the cache.
+     * @param T element to remove
+     * @return true if found, false if not found
      */
-    public void moveToTop (int index){
-      T elementToMove = thisCache.remove(index);
-      thisCache.addFirst(elementToMove);
+    public boolean findAndRemove(T item){
+      return thisCache.remove(item);
     }
 
     /**addToTop adds item to the beginning of the list

@@ -110,7 +110,6 @@ public class Test {
         StringTokenizer strToken;
         String DELIMITER = " ";
         String line, word;
-        int wordIndex;
         long wordCount = 0;
         
         try{
@@ -126,18 +125,20 @@ public class Test {
                     word = strToken.nextToken();
                     numCache1References++; //increment cache 1 reference counter
                     //search for item in cache1
-                    if((wordIndex = cache1.findItemIndex(word)) > -1){ //found the word in cache1 - move hit data to top of both caches
+                    if(cache1.findAndRemove(word)){ //found the word in cache1 - move hit data to top of both caches
                         numCache1Hits++; //increment cache 1 hit counter
-                        cache1.moveToTop(wordIndex);
+                        cache1.addToTop(word);
                         if (cacheLevel == 2){ //there is a second-level cache - move this hit data to top of cache2 as well
-                            cache2.moveToTop(cache2.findItemIndex(word));
+                            if (cache2.findAndRemove(word)){ //found in cache 2
+                                cache2.addToTop(word);
+                            }
                         }
                     } else { //did not find word in cache1 - search in cache 2 (if there is one)
                         if (cacheLevel == 2){ //two caches so search in cache 2
                             numCache2References++; //increment cache 2 reference counter
-                            if((wordIndex = cache2.findItemIndex(word)) > -1){ //found the word in cache2
+                            if(cache2.findAndRemove(word)){ //found the word in cache2
                                 numCache2Hits++; //increment cache 2 hit counter
-                                cache2.moveToTop(wordIndex); //move hit data to top of cache 2
+                                cache2.addToTop(word); //move hit data to top of cache 2
                                 cache1.addToTop(word);//add item to top of cache 1
 
                             } else { //not found in cache 2 - add to top of both cache 1 and cache 2
@@ -152,12 +153,12 @@ public class Test {
             }
             inputStrmRdr.close();
             bufferRdr.close();
+            fileInputStr.close();
         } catch (Exception e){
             //parsing error - how to handle this?
-            System.out.println("Parsing error");
+            System.out.println("Parsing error.");
+            System.exit(1);
         }
-
-        //fileInputStr.close(); //TODO: How do I close this? Says I'm not handeling IO Exception, but if I make it here, I have a valid File Input Stream
 
 
         //PRINT OUTPUT
